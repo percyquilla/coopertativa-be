@@ -1,0 +1,34 @@
+quarkus:
+  http:
+    cors:
+      enabled: true
+      origins: http://localhost:3033
+  datasource:
+    db-kind: postgresql
+    username: bienbcb
+    password: bienbcb
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/bienbcb
+  hibernate-orm:
+    database:
+      generation: validate
+    log:
+
+      sql: false
+
+mp:
+  jwt:
+    verify:
+      publickey:
+        location: publicKey.pem
+      issuer: https://bienbcb.com/issuer
+
+smallrye:
+  jwt:
+    sign:
+      key:
+        location: privateKey.pem
+
+bienbcb:
+  jwt:
+    duration-minutes: 60

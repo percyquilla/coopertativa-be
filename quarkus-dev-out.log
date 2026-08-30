@@ -1,0 +1,36 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.bien:bienbcb-be >-------------------------
+[INFO] Building bienbcb-be 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] ------------------------------[ quarkus ]-------------------------------
+[INFO] 
+[INFO] --- quarkus:3.38.3:dev (default-cli) @ bienbcb-be ---
+[INFO] Invoking quarkus:3.38.3:generate-code (default-generate-code) @ bienbcb-be
+[INFO] Invoking resources:3.3.1:resources (default-resources) @ bienbcb-be
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Invoking compiler:3.15.0:compile (default-compile) @ bienbcb-be
+[INFO] Recompiling the module because of added or removed source files.
+[INFO] Compiling 18 source files with javac [debug parameters release 21] to target\classes
+[INFO] Invoking quarkus:3.38.3:generate-code-tests (default-generate-code-tests) @ bienbcb-be
+[INFO] Invoking resources:3.3.1:testResources (default-testResources) @ bienbcb-be
+[INFO] skip non existing resourceDirectory C:\Users\PERCY\Documents\cooperativa\aplicacion\bienbcb-be\src\test\resources
+[INFO] Invoking compiler:3.15.0:testCompile (default-testCompile) @ bienbcb-be
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 3 source files with javac [debug parameters release 21] to target\test-classes
+Listening for transport dt_socket at address: 5005
+Press [e] to edit command line args (currently ''), [h] for more options>
+Tests paused
+Press [e] to edit command line args (currently ''), [r] to resume testing, [h] for more options>
+Press [e] to edit command line args (currently ''), [r] to resume testing, [o] Toggle test output, [h] for more options>
+2026-08-23 10:40:39,881 INFO  [org.testcontainers.DockerClientFactory] (build-31) Testcontainers version: 2.0.5
+2026-08-23 10:40:40,124 INFO  [org.testcontainers.dockerclient.DockerClientProviderStrategy] (build-31) Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+2026-08-23 10:40:40,894 INFO  [org.testcontainers.dockerclient.DockerClientProviderStrategy] (build-31) Found Docker environment with local Npipe socket (npipe:////./pipe/docker_engine)
+__  ____  __  _____   ___  __ ____  ______ 
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
+2026-08-23 10:40:42,824 WARN  [io.quarkus.config] (Quarkus Main Thread) The "quarkus.hibernate-orm.database.generation" config property is deprecated and should not be used anymore.
+2026-08-23 10:40:43,865 INFO  [io.quarkus] (Quarkus Main Thread) bienbcb-be 1.0-SNAPSHOT on JVM (powered by Quarkus 3.38.3) started in 5.427s. Listening on: http://localhost:8080
+2026-08-23 10:40:43,865 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
+2026-08-23 10:40:43,866 INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, compose, config-yaml, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-postgresql, narayana-jta, rest, rest-jackson, security, smallrye-context-propagation, smallrye-jwt, vertx]
