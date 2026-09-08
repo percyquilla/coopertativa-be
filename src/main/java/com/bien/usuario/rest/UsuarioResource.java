@@ -5,6 +5,7 @@ import com.bien.usuario.dto.UsuarioRequest;
 import com.bien.usuario.dto.UsuarioResponse;
 import com.bien.usuario.dto.UsuarioUpdateRequest;
 import com.bien.usuario.service.UsuarioService;
+import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 
 import java.net.URI;
@@ -31,6 +33,21 @@ public class UsuarioResource {
 
     @Inject
     UsuarioService usuarioService;
+
+    @GET
+    @Path("/me")
+    @Authenticated
+    public UsuarioResponse me(@Context SecurityContext securityContext) {
+        return usuarioService.findByUsername(securityContext.getUserPrincipal().getName());
+    }
+
+    @PUT
+    @Path("/me/password")
+    @Authenticated
+    public Response changeOwnPassword(@Valid UsuarioPasswordRequest request, @Context SecurityContext securityContext) {
+        usuarioService.changeOwnPassword(securityContext.getUserPrincipal().getName(), request);
+        return Response.noContent().build();
+    }
 
     @GET
     public List<UsuarioResponse> listAll() {

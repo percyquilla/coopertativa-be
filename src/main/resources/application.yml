@@ -15,6 +15,9 @@ quarkus:
     log:
 
       sql: false
+  flyway:
+    migrate-at-start: true
+    baseline-on-migrate: false
 
 mp:
   jwt:

@@ -5,14 +5,20 @@ import com.bien.persona.dto.PersonaResponse;
 import com.bien.persona.entity.Persona;
 import com.bien.persona.repository.PersonaRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import com.bien.common.security.AuditContext;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
 @ApplicationScoped
 public class PersonaService {
+
+    @Inject
+    AuditContext audit;
 
     @Inject
     PersonaRepository personaRepository;
@@ -29,8 +35,13 @@ public class PersonaService {
 
     @Transactional
     public PersonaResponse create(PersonaRequest request) {
+        if (personaRepository.existsByCedulaIdentidadAndExpedicion(request.cedulaIdentidad(), request.expedicion())) {
+            throw new WebApplicationException("Ya existe una persona con esa cédula de identidad", Response.Status.CONFLICT);
+        }
         Persona persona = new Persona();
         applyRequest(persona, request);
+        persona.setEstado("V");
+        persona.setEstacion("SISTEMA");
         personaRepository.persist(persona);
         personaRepository.getEntityManager().flush();
         personaRepository.getEntityManager().refresh(persona);
@@ -40,11 +51,14 @@ public class PersonaService {
     @Transactional
     public PersonaResponse update(Long id, PersonaRequest request) {
         Persona persona = findEntityOrThrow(id);
+        if (personaRepository.existsByCedulaIdentidadAndExpedicionAndIdNot(request.cedulaIdentidad(), request.expedicion(), id)) {
+            throw new WebApplicationException("Ya existe una persona con esa cédula de identidad", Response.Status.CONFLICT);
+        }
         applyRequest(persona, request);
         return PersonaResponse.from(persona);
     }
 
-    private Persona findEntityOrThrow(Long id) {
+    public Persona findEntityOrThrow(Long id) {
         return personaRepository.findByIdOptional(id)
                 .orElseThrow(() -> new NotFoundException("Persona no encontrada: " + id));
     }
@@ -64,6 +78,6 @@ public class PersonaService {
         persona.setNumeroTelefono(request.numeroTelefono());
         persona.setFechaNacimiento(request.fechaNacimiento());
         persona.setEstadoCivil(request.estadoCivil());
-        persona.setUsuario(request.usuario());
+        persona.setUsuario(audit.actor());
     }
 }

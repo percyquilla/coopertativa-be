@@ -24,7 +24,7 @@ import java.util.List;
 @Path("/personas")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed({"ADMIN", "USER"})
+@RolesAllowed({"ADMIN", "OFICIAL", "CAJERO", "GERENTE", "AUDITOR"})
 public class PersonaResource {
 
     @Inject
@@ -42,7 +42,7 @@ public class PersonaResource {
     }
 
     @POST
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN", "OFICIAL"})
     public Response create(@Valid PersonaRequest request, @Context UriInfo uriInfo) {
         PersonaResponse response = personaService.create(request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(response.id())).build();
@@ -51,7 +51,7 @@ public class PersonaResource {
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN", "OFICIAL"})
     public PersonaResponse update(@PathParam("id") Long id, @Valid PersonaRequest request) {
         return personaService.update(id, request);
     }

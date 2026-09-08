@@ -21,7 +21,9 @@ public record PersonaResponse(
         String numeroTelefono,
         LocalDate fechaNacimiento,
         String estadoCivil,
+        String estado,
         String usuario,
+        String estacion,
         LocalDateTime fechaHora) {
 
     public static PersonaResponse from(Persona persona) {
@@ -41,7 +43,9 @@ public record PersonaResponse(
                 persona.getNumeroTelefono(),
                 persona.getFechaNacimiento(),
                 persona.getEstadoCivil(),
+                persona.getEstado(),
                 persona.getUsuario(),
+                persona.getEstacion(),
                 persona.getFechaHora());
     }
 }

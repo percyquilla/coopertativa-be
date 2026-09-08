@@ -16,7 +16,7 @@ public class Persona {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_persona")
+    @Column(name = "persona_id")
     private Long id;
 
     @Column(name = "apellido_paterno", length = 50, nullable = false)
@@ -37,7 +37,7 @@ public class Persona {
     @Column(name = "expedicion", length = 5)
     private String expedicion;
 
-    @Column(name = "genero", length = 1, nullable = false)
+    @Column(name = "genero", length = 2, nullable = false)
     private String genero;
 
     @Column(name = "lugar_trabajo", length = 80)
@@ -52,7 +52,7 @@ public class Persona {
     @Column(name = "correo_personal", length = 80)
     private String correoPersonal;
 
-    @Column(name = "numero_telefono", length = 10, nullable = false)
+    @Column(name = "numero_telefono", length = 10)
     private String numeroTelefono;
 
     @Column(name = "fecha_nacimiento", nullable = false)
@@ -61,8 +61,14 @@ public class Persona {
     @Column(name = "estado_civil", length = 20, nullable = false)
     private String estadoCivil;
 
+    @Column(name = "estado", length = 3, nullable = false)
+    private String estado;
+
     @Column(name = "usuario", length = 50)
     private String usuario;
+
+    @Column(name = "estacion", length = 30, nullable = false)
+    private String estacion;
 
     @Column(name = "fecha_hora", insertable = false, updatable = false)
     private LocalDateTime fechaHora;
@@ -183,12 +189,28 @@ public class Persona {
         this.estadoCivil = estadoCivil;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     public String getUsuario() {
         return usuario;
     }
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+
+    public String getEstacion() {
+        return estacion;
+    }
+
+    public void setEstacion(String estacion) {
+        this.estacion = estacion;
     }
 
     public LocalDateTime getFechaHora() {
