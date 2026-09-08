@@ -2,13 +2,13 @@ quarkus:
   http:
     cors:
       enabled: true
-      origins: http://localhost:3033
+      origins: ${CORS_ORIGINS:http://localhost:3033}
   datasource:
     db-kind: postgresql
-    username: bienbcb
-    password: bienbcb
+    username: ${DB_USERNAME:bienbcb}
+    password: ${DB_PASSWORD:bienbcb}
     jdbc:
-      url: jdbc:postgresql://localhost:5432/bienbcb
+      url: ${DB_URL:jdbc:postgresql://localhost:5432/bienbcb}
   hibernate-orm:
     database:
       generation: validate
