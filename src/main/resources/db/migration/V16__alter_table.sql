@@ -1,5 +1,7 @@
-alter table sc_socios.certificado_aportacion add (operacion_id BIGINT);
 
-alter table sc_socios.solicitud_retiro add (operacion_id BIGINT);
 
-alter table sc_socios.solicitud_retiro add (certificado_id BIGINT);
+ALTER TABLE sc_socios.certificado_aportacion ADD COLUMN operacion_id BIGINT;
+
+ALTER TABLE sc_socios.solicitud_retiro ADD COLUMN operacion_id BIGINT;
+
+ALTER TABLE sc_socios.solicitud_retiro ADD COLUMN certificado_id BIGINT;
