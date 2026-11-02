@@ -1,0 +1,53 @@
+Observaciones:
+1) En /dashboard/persona en la tabla principal, quitar el cargo e incluir el lugar de trabajo, también incluir la fecha y hora, y estado
+2) Incluir un utilitario para obtener el IP de la estación que registra o modificar, actualmente este quemado con "sistema"
+3) Incluir numeradores de dominio, ya que los estado actualmente están quemados
+4) en la opción de socios dashboard/socios/  eliminar la columna sucursal e incluir los datos de persona: número de cedula de identidad, teléfono/ celular y correo electrónico. En la modificación el número de socio no debe ser debería ser modificable y en la parte superior que muestre los datos de la persona incluyendo apellido de casada.
+5) en la opción dashboard/socios/ incluir un reporte en Excel que permita visualizar los datos de socios, como nombre, número de cedula de identidad, teléfono/ celular, correo electrónico, dirección, genero, fecha de ingreso, monto de certificado de aportación, estado de socio
+6) en la opción dashboard/aportaciones/ en la creación de la tabla hay alguna inconsistencia, ya que las columnas al crear la tabla no son las mismas al realizar una consulta. En el archivo v1_init se encuentra el siguiente script:
+
+ CREATE TABLE sc_socios.certificado_aportacion (
+    certificado_id         BIGINT GENERATED ALWAYS AS IDENTITY,
+    persona_id             BIGINT NOT NULL,
+    monto_estado           NUMERIC(18,2) NOT NULL DEFAULT 0,
+    estado_verif           VARCHAR(15) NOT NULL DEFAULT 'PND',
+    estado                 VARCHAR(15) NOT NULL DEFAULT 'REG',
+    fecha                  DATE NOT NULL,
+    usuario                VARCHAR(50),
+    fecha_hora             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    estacion               VARCHAR(30) NOT NULL,
+
+    CONSTRAINT pk_certificado PRIMARY KEY (certificado_id),
+
+    CONSTRAINT fk_certif_persona FOREIGN KEY (persona_id)
+        REFERENCES sc_socios.persona (persona_id)
+);
+
+pero al consultar se encuentran los campos de valor_unitario y cantidad, por ejemplo. Verificar
+En la table sc_socios.certificado_aportacion se debe crear el campo operacion_id
+
+7) En la opción dashboard/aportaciones/ en la opción de Emitir certificado, en la lista de socios, se muestra dos veces el código del socio, eliminar uno de los códigos.
+   En la opción de Emitir certificado el número de certificado debe generarse de manera automática, a partir del máximo numero de certificado convertido a integer, para posteriormente convertir a string con 6 dígitos con ceros rellenados a la izquierda.
+
+8) La operativa de dashboard/aportaciones/ en la opción de Emitir certificado, el valor unitario debe estar registrado en parámetros con código VALOR_UNIT_APORTE, con valor 500.00. Este monto será obtenido por defecto para el registro de emisión de certificado.
+
+9) La operativa de dashboard/aportaciones/ en la tabla principal eliminar la columna Cuenta CA
+
+10) Se modifica la operativa de dashboard/aportaciones/ de acuerdo a lo siguiente: 
+                   - La operación de registro de aportación ya no pasa por una cuenta con producto CA
+                   - Al registrar la emisión de certificado, se registra inicialmente con estado "REG" y no con "V", esto lo puede realizar el perfil "OFICIAL" 
+                   - Una vez que se registra la emisión de certificado, se habilita la opción de "Aprobar" , al aprobar la emisión el estado cambia a "PND", se debe volver a registrar la             fecha y hora, usuario y estación.
+                   - Una vez aprobado, se habilita la opción "Autorizar" para el usuario "ADMIN" y al autorizar se crea la operación con el monto en la tabla operacion_contable, donde a la vez se registra el comprobante contable con el esquema de certificado de aportación "APO_EMI", finalmente el estado del registro de emisión queda en estado autorizado, y se actualiza la tabla certificado_aportacion en la columna operacion_id, con el número de operación de operacion_contable y estado pasa a "VIG" de vigente
+                   - En la tabla principal de dashboard/aportaciones/, mostrar el valor nominal, estado de la emisión de certificado, usuario y fecha y hora.
+
+11) En la opción dashboard/solicitudes-retiro/ modificar la operativa de manera similar a aportaciones. En el momento del registro de solicitud de retiro:
+   - En el formulario listar los certificados en estado "AUT" que corresponden al socio y seleccionar el certificado a retirar. Solo puede seleccionar una aportacion
+   - Si solo tiene un certificado de aportación, se debe verificar que las cuentas de ahorro se encuentren cerradas. Si las cuentas están cerradas permite registrar la solicitud de retiro en estado "REG" y se registra en el campo certificado_id el ID del certificado a retirar
+   - Una vez registrado en REG, se habilita la opción Aprobar, donde al aprobar cambia el estado a "PND". El registro y aprobación puede ser realizada por el "OFICIAL"
+   - Una vez aprobado, se habilita la opción "Autorizar" para el usuario "ADMIN" o "GERENTE". AL ejecutar la opción de autorizar, se registra la operación de retiro en la tabla operacion_contable, a la vez que se registra el comprobante contable.
+   - Una vez registrado el comprobante contable se actualiza en solicitud_retiro en el campo operacion_id con la operación asociada al comprobante,  modificar el estado de solicitud_retiro a "AUT" autorizado y finalmente modificar el estado de certificado_aportacion a estado CRR de cerrado.
+
+
+
+
+
