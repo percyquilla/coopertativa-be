@@ -76,7 +76,7 @@ public class EsquemaContableService {
         e.setEstado(request.estado());
         e.setFechaInicio(LocalDate.now());
         e.setUsuario(audit.actor());
-        e.setEstacion("SISTEMA");
+        e.setEstacion(audit.estacion());
         repository.persist(e);
         repository.getEntityManager().flush();
 
@@ -101,6 +101,7 @@ public class EsquemaContableService {
         e.setDescripcion(request.descripcion());
         e.setEstado(request.estado());
         e.setUsuario(audit.actor());
+        e.setEstacion(audit.estacion());
 
         detalleRepository.deleteByEsquema(id);
         detalleRepository.getEntityManager().flush();
@@ -125,7 +126,7 @@ public class EsquemaContableService {
         copia.setEstado("S");
         copia.setFechaInicio(LocalDate.now());
         copia.setUsuario(audit.actor());
-        copia.setEstacion("SISTEMA");
+        copia.setEstacion(audit.estacion());
         repository.persist(copia);
         repository.getEntityManager().flush();
 

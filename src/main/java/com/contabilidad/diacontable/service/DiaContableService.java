@@ -104,7 +104,7 @@ public class DiaContableService {
             dia = new DiaContable();
             dia.setFecha(fecha);
             dia.setPeriodoId(periodo.getId());
-            dia.setEstacion("SISTEMA");
+            dia.setEstacion(audit.estacion());
         }
         dia.setEstado("A");
         dia.setUsuario(audit.actor());
@@ -145,6 +145,7 @@ public class DiaContableService {
 
         dia.setEstado("C");
         dia.setUsuario(audit.actor());
+        dia.setEstacion(audit.estacion());
         return estado(fecha);
     }
 
@@ -176,6 +177,7 @@ public class DiaContableService {
         requireSinOtroDiaAbierto(fecha, "reabrir");
         dia.setEstado("R");
         dia.setUsuario(audit.actor());
+        dia.setEstacion(audit.estacion());
         return estado(fecha);
     }
 

@@ -136,7 +136,7 @@ public class MotorContableTx {
         op.setIntentos((op.getIntentos() == null ? 0 : op.getIntentos()) + 1);
         op.setUsuario(audit.actor());
         if (op.getEstacion() == null) {
-            op.setEstacion("SISTEMA");
+            op.setEstacion(audit.estacion());
         }
         if (operacionExistenteId == null) {
             operacionRepository.persist(op);
@@ -160,12 +160,12 @@ public class MotorContableTx {
      * sumando un intento.
      */
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void registrarPendiente(ContextoContable ctx, String motivo, Long operacionExistenteId) {
+    public Long registrarPendiente(ContextoContable ctx, String motivo, Long operacionExistenteId) {
         OperacionContable op = operacionExistenteId == null
                 ? new OperacionContable()
                 : operacionRepository.findById(operacionExistenteId);
         if (op == null) {
-            return;
+            return null;
         }
 
         TipoOperacion tipoOp = buscarTipoLenient(ctx.codigoOperacion());
@@ -183,12 +183,13 @@ public class MotorContableTx {
         op.setIntentos((op.getIntentos() == null ? 0 : op.getIntentos()) + 1);
         op.setUsuario(audit.actor());
         if (op.getEstacion() == null) {
-            op.setEstacion("SISTEMA");
+            op.setEstacion(audit.estacion());
         }
         if (operacionExistenteId == null) {
             operacionRepository.persist(op);
         }
         operacionRepository.getEntityManager().flush();
+        return op.getId();
     }
 
     // ---- internos ----

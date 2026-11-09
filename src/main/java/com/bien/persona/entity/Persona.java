@@ -70,7 +70,8 @@ public class Persona {
     @Column(name = "estacion", length = 30, nullable = false)
     private String estacion;
 
-    @Column(name = "fecha_hora", insertable = false, updatable = false)
+    /** Lo pone la BD al insertar; el servicio lo vuelve a sellar al modificar. */
+    @Column(name = "fecha_hora", insertable = false)
     private LocalDateTime fechaHora;
 
     public Long getId() {
@@ -215,5 +216,9 @@ public class Persona {
 
     public LocalDateTime getFechaHora() {
         return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
     }
 }

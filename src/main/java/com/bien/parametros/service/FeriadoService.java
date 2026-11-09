@@ -50,7 +50,7 @@ public class FeriadoService {
         f.setRecurrente(request.recurrente() != null && request.recurrente());
         f.setEstado("V");
         f.setUsuario(audit.actor());
-        f.setEstacion("SISTEMA");
+        f.setEstacion(audit.estacion());
         repository.persist(f);
         repository.getEntityManager().flush();
         repository.getEntityManager().refresh(f);
@@ -71,6 +71,7 @@ public class FeriadoService {
             f.setRecurrente(request.recurrente());
         }
         f.setUsuario(audit.actor());
+        f.setEstacion(audit.estacion());
         return FeriadoResponse.from(f);
     }
 

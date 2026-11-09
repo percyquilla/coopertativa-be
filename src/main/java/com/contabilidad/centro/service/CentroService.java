@@ -43,7 +43,7 @@ public class CentroService {
         c.setNombre(request.nombre());
         c.setEstado(request.estado() != null ? request.estado() : "V");
         c.setUsuario(audit.actor());
-        c.setEstacion("SISTEMA");
+        c.setEstacion(audit.estacion());
 
         repository.persist(c);
         repository.getEntityManager().flush();
@@ -66,6 +66,7 @@ public class CentroService {
         c.setNombre(request.nombre());
         c.setEstado(estado);
         c.setUsuario(audit.actor());
+        c.setEstacion(audit.estacion());
         return CentroResponse.from(c);
     }
 

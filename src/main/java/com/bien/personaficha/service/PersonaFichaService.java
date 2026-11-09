@@ -24,7 +24,6 @@ import java.util.List;
 @ApplicationScoped
 public class PersonaFichaService {
 
-    private static final String ESTACION = "SISTEMA";
 
     @Inject
     PersonaService personaService;
@@ -53,7 +52,7 @@ public class PersonaFichaService {
         personaService.findEntityOrThrow(personaId);
         PersonaDireccion d = new PersonaDireccion();
         d.setPersonaId(personaId);
-        d.setEstacion(ESTACION);
+        d.setEstacion(audit.estacion());
         aplicar(d, request);
         direcciones.persist(d);
         direcciones.getEntityManager().flush();
@@ -94,6 +93,7 @@ public class PersonaFichaService {
         d.setEsPrincipal(r.esPrincipal());
         d.setEstado(r.estado() != null ? r.estado() : "V");
         d.setUsuario(audit.actor());
+        d.setEstacion(audit.estacion());
     }
 
     // ---------- contactos ----------
@@ -108,7 +108,7 @@ public class PersonaFichaService {
         personaService.findEntityOrThrow(personaId);
         PersonaContacto c = new PersonaContacto();
         c.setPersonaId(personaId);
-        c.setEstacion(ESTACION);
+        c.setEstacion(audit.estacion());
         aplicar(c, request);
         contactos.persist(c);
         contactos.getEntityManager().flush();
@@ -145,6 +145,7 @@ public class PersonaFichaService {
         c.setEsPrincipal(r.esPrincipal());
         c.setEstado(r.estado() != null ? r.estado() : "V");
         c.setUsuario(audit.actor());
+        c.setEstacion(audit.estacion());
     }
 
     // ---------- documentos ----------
@@ -160,7 +161,7 @@ public class PersonaFichaService {
         validarFechas(request);
         PersonaDocumento d = new PersonaDocumento();
         d.setPersonaId(personaId);
-        d.setEstacion(ESTACION);
+        d.setEstacion(audit.estacion());
         aplicar(d, request);
         documentos.persist(d);
         documentos.getEntityManager().flush();
@@ -195,6 +196,7 @@ public class PersonaFichaService {
         d.setFechaVencimiento(r.fechaVencimiento());
         d.setEstado(r.estado() != null ? r.estado() : "V");
         d.setUsuario(audit.actor());
+        d.setEstacion(audit.estacion());
     }
 
     private void validarFechas(DocumentoRequest r) {

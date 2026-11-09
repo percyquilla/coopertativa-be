@@ -59,7 +59,7 @@ public class CuentaTitularService {
         t.setFechaInicio(LocalDate.now());
         t.setEstado("V");
         t.setUsuario(audit.actor());
-        t.setEstacion("SISTEMA");
+        t.setEstacion(audit.estacion());
         repository.persist(t);
         repository.getEntityManager().flush();
         repository.getEntityManager().refresh(t);

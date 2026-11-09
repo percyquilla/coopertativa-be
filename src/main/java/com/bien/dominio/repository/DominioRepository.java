@@ -32,5 +32,10 @@ public class DominioRepository implements PanacheRepositoryBase<Dominio, String>
         public List<DominioValor> listByDominio(String dominioId) {
             return list("dominioId = ?1 order by valor", dominioId);
         }
+
+        /** {@code true} si el código existe y está vigente en el dominio. */
+        public boolean existsVigente(String dominioId, String valor) {
+            return count("dominioId = ?1 and valor = ?2 and estado = 'V'", dominioId, valor) > 0;
+        }
     }
 }

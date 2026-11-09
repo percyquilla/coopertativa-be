@@ -46,7 +46,7 @@ public class BeneficiarioService {
 
         Beneficiario b = new Beneficiario();
         b.setSocioId(socioId);
-        b.setEstacion("SISTEMA");
+        b.setEstacion(audit.estacion());
         aplicar(b, request);
 
         repository.persist(b);
@@ -106,5 +106,6 @@ public class BeneficiarioService {
         b.setFechaNacimiento(r.fechaNacimiento());
         b.setEstado(r.estado() != null ? r.estado() : "V");
         b.setUsuario(audit.actor());
+        b.setEstacion(audit.estacion());
     }
 }

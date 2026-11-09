@@ -54,11 +54,20 @@ public class SolicitudRetiro {
     @Column(name = "usuario", length = 50)
     private String usuario;
 
-    @Column(name = "fecha_hora", insertable = false, updatable = false)
+    /** Lo pone la BD al insertar; el servicio lo vuelve a sellar en cada cambio de estado. */
+    @Column(name = "fecha_hora", insertable = false)
     private LocalDateTime fechaHora;
 
     @Column(name = "estacion", length = 30, nullable = false)
     private String estacion;
+
+    /** Certificado de aportación que se retira (Obs. #11). */
+    @Column(name = "certificado_id")
+    private Long certificadoId;
+
+    /** Operación contable generada al autorizar el retiro (APO_DEV). */
+    @Column(name = "operacion_id")
+    private Long operacionId;
 
     public Long getId() {
         return id;
@@ -146,6 +155,26 @@ public class SolicitudRetiro {
 
     public LocalDateTime getFechaHora() {
         return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
+    }
+
+    public Long getCertificadoId() {
+        return certificadoId;
+    }
+
+    public void setCertificadoId(Long certificadoId) {
+        this.certificadoId = certificadoId;
+    }
+
+    public Long getOperacionId() {
+        return operacionId;
+    }
+
+    public void setOperacionId(Long operacionId) {
+        this.operacionId = operacionId;
     }
 
     public String getEstacion() {

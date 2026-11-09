@@ -26,18 +26,23 @@ public class ContabilizadorService {
      * Contabiliza el hecho descrito por {@code ctx}. Nunca lanza: cualquier
      * problema se registra como operación pendiente. Llamar siempre <em>después</em>
      * del {@code flush()} que asigna el id de la fila de origen.
+     *
+     * @return id de la {@code operacion_contable} generada — en PROC si se
+     *         contabilizó, en PND si quedó pendiente —, o {@code null} si ni
+     *         siquiera se pudo encolar.
      */
-    public void contabilizar(ContextoContable ctx) {
+    public Long contabilizar(ContextoContable ctx) {
         try {
-            tx.generar(ctx, null);
+            return tx.generar(ctx, null);
         } catch (RuntimeException e) {
             LOG.warnf("No se pudo contabilizar %s (%s#%s): %s",
                     ctx.codigoOperacion(), ctx.origenTabla(), ctx.origenId(), e.getMessage());
             try {
-                tx.registrarPendiente(ctx, e.getMessage(), null);
+                return tx.registrarPendiente(ctx, e.getMessage(), null);
             } catch (RuntimeException encolar) {
                 LOG.errorf(encolar, "No se pudo ni encolar la operación pendiente %s (%s#%s)",
                         ctx.codigoOperacion(), ctx.origenTabla(), ctx.origenId());
+                return null;
             }
         }
     }

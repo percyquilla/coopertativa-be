@@ -44,7 +44,7 @@ public class ProductoTasaService {
         t.setProductoId(productoId);
         aplicar(t, request);
         t.setUsuario(audit.actor());
-        t.setEstacion("SISTEMA");
+        t.setEstacion(audit.estacion());
 
         repository.persist(t);
         repository.getEntityManager().flush();
@@ -63,6 +63,7 @@ public class ProductoTasaService {
 
         aplicar(t, request);
         t.setUsuario(audit.actor());
+        t.setEstacion(audit.estacion());
         return ProductoTasaResponse.from(t);
     }
 

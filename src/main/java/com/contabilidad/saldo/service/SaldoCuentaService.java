@@ -220,7 +220,7 @@ public class SaldoCuentaService {
         s.setTotalDebito(BigDecimal.ZERO);
         s.setTotalCredito(BigDecimal.ZERO);
         s.setSaldoFinal(s.getSaldoInicial());
-        s.setEstacion("SISTEMA");
+        s.setEstacion(audit.estacion());
         return s;
     }
 

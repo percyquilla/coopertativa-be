@@ -54,7 +54,7 @@ public class ParametroGeneralService {
         p.setEditable(request.editable() == null || request.editable());
         p.setEstado("V");
         p.setUsuario(audit.actor());
-        p.setEstacion("SISTEMA");
+        p.setEstacion(audit.estacion());
         repository.persist(p);
         repository.getEntityManager().flush();
         repository.getEntityManager().refresh(p);
@@ -74,6 +74,7 @@ public class ParametroGeneralService {
             p.setEditable(request.editable());
         }
         p.setUsuario(audit.actor());
+        p.setEstacion(audit.estacion());
         return ParametroGeneralResponse.from(p);
     }
 

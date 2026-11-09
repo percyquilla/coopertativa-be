@@ -59,7 +59,7 @@ public class TipoOperacionService {
         t.setEstado(request.estado());
         t.setFechaInicio(LocalDate.now());
         t.setUsuario(audit.actor());
-        t.setEstacion("SISTEMA");
+        t.setEstacion(audit.estacion());
         repository.persist(t);
         repository.getEntityManager().flush();
         repository.getEntityManager().refresh(t);
@@ -85,6 +85,7 @@ public class TipoOperacionService {
             t.setFechaFin("S".equals(request.estado()) ? LocalDate.now() : null);
         }
         t.setUsuario(audit.actor());
+        t.setEstacion(audit.estacion());
         return toResponse(t);
     }
 

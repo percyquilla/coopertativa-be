@@ -63,7 +63,7 @@ public class PeriodoContableService {
             p.setFechaFin(ym.atEndOfMonth());
             p.setEstado("A");
             p.setUsuario(usuario);
-            p.setEstacion("SISTEMA");
+            p.setEstacion(audit.estacion());
             repository.persist(p);
             generarDias(p, usuario);
             creados.add(PeriodoContableResponse.from(p));
@@ -85,7 +85,7 @@ public class PeriodoContableService {
             dia.setPeriodoId(p.getId());
             dia.setEstado(d.isBefore(hoy) ? "C" : "P");
             dia.setUsuario(usuario);
-            dia.setEstacion("SISTEMA");
+            dia.setEstacion(audit.estacion());
             diaRepository.persist(dia);
         }
     }
@@ -108,6 +108,7 @@ public class PeriodoContableService {
         }
         p.setEstado("C");
         p.setUsuario(audit.actor());
+        p.setEstacion(audit.estacion());
         repository.getEntityManager().flush();
 
         // el saldo con que cierra cada cuenta pasa a ser el saldo inicial del mes siguiente
@@ -125,6 +126,7 @@ public class PeriodoContableService {
         }
         p.setEstado("R");
         p.setUsuario(audit.actor());
+        p.setEstacion(audit.estacion());
         return PeriodoContableResponse.from(p);
     }
 

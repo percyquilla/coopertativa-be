@@ -102,7 +102,7 @@ public class CuentaContableService {
         c.setEstado("V");
         c.setFechaInicio(LocalDate.now());
         c.setUsuario(audit.actor());
-        c.setEstacion("SISTEMA");
+        c.setEstacion(audit.estacion());
 
         repository.persist(c);
         repository.getEntityManager().flush();
@@ -123,6 +123,7 @@ public class CuentaContableService {
         c.setNombre(request.nombre());
         c.setDescripcion(request.descripcion());
         c.setUsuario(audit.actor());
+        c.setEstacion(audit.estacion());
 
         if (!c.getEstado().equals(request.estado())) {
             c.setEstado(request.estado());

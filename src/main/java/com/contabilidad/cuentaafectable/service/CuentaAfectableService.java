@@ -107,7 +107,7 @@ public class CuentaAfectableService {
         a.setEstado("V");
         a.setFechaInicio(LocalDate.now());
         a.setUsuario(audit.actor());
-        a.setEstacion("SISTEMA");
+        a.setEstacion(audit.estacion());
 
         repository.persist(a);
         repository.getEntityManager().flush();
@@ -126,6 +126,7 @@ public class CuentaAfectableService {
         a.setCodigo(request.codigo());
         a.setDescripcion(request.descripcion());
         a.setUsuario(audit.actor());
+        a.setEstacion(audit.estacion());
 
         if (!a.getEstado().equals(request.estado())) {
             a.setEstado(request.estado());

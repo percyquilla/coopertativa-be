@@ -111,7 +111,7 @@ public class ComprobanteService {
         c.setGlosa(request.glosa());
         c.setEstado("REG");
         c.setUsuarioCreacion(audit.actor());
-        c.setEstacion("SISTEMA");
+        c.setEstacion(audit.estacion());
         repository.persist(c);
         repository.getEntityManager().flush();
 
@@ -207,7 +207,7 @@ public class ComprobanteService {
         rev.setGlosa(glosaDeReversion(c, motivo));
         rev.setEstado("REG");
         rev.setUsuarioCreacion(audit.actor());
-        rev.setEstacion("SISTEMA");
+        rev.setEstacion(audit.estacion());
         repository.persist(rev);
         repository.getEntityManager().flush();
 

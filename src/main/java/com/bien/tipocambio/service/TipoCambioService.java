@@ -51,7 +51,7 @@ public class TipoCambioService {
         t.setOficial(request.oficial());
         t.setUsuario(audit.actor());
         t.setEstado("V");
-        t.setEstacion("SISTEMA");
+        t.setEstacion(audit.estacion());
         repository.persist(t);
         repository.getEntityManager().flush();
         repository.getEntityManager().refresh(t);
@@ -70,6 +70,7 @@ public class TipoCambioService {
         t.setVenta(request.venta());
         t.setOficial(request.oficial());
         t.setUsuario(audit.actor());
+        t.setEstacion(audit.estacion());
         return TipoCambioResponse.from(t);
     }
 

@@ -9,36 +9,32 @@ import java.time.LocalDateTime;
 public record CertificadoAportacionResponse(
         Long id,
         Long socioId,
-        Long cuentaCaptacionId,
-        String numeroCuenta,
         String numero,
         BigDecimal valorUnitario,
         Integer cantidad,
         BigDecimal montoNominal,
-        BigDecimal saldoCuenta,
         LocalDate fechaEmision,
         String estadoVerif,
         String estado,
+        Long operacionId,
         String usuario,
-        LocalDateTime fechaHora) {
+        LocalDateTime fechaHora,
+        String estacion) {
 
-    public static CertificadoAportacionResponse from(CertificadoAportacion c,
-                                                     String numeroCuenta,
-                                                     BigDecimal saldoCuenta) {
+    public static CertificadoAportacionResponse from(CertificadoAportacion c) {
         return new CertificadoAportacionResponse(
                 c.getId(),
                 c.getSocioId(),
-                c.getCuentaCaptacionId(),
-                numeroCuenta,
                 c.getNumero(),
                 c.getValorUnitario(),
                 c.getCantidad(),
                 c.getValorUnitario().multiply(BigDecimal.valueOf(c.getCantidad())),
-                saldoCuenta,
                 c.getFechaEmision(),
                 c.getEstadoVerif(),
                 c.getEstado(),
+                c.getOperacionId(),
                 c.getUsuario(),
-                c.getFechaHora());
+                c.getFechaHora(),
+                c.getEstacion());
     }
 }

@@ -78,7 +78,7 @@ public class CuentaCaptacionService {
         c.setSaldoBloqueado(BigDecimal.ZERO);
         c.setEstadoCuenta("A");
         c.setUsuario(usuario);
-        c.setEstacion("SISTEMA");
+        c.setEstacion(audit.estacion());
 
         repository.persist(c);
         repository.getEntityManager().flush();

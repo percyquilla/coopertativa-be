@@ -1,5 +1,6 @@
 package com.bien.socio.rest;
 
+import com.bien.socio.dto.SocioReporteRow;
 import com.bien.socio.dto.SocioRequest;
 import com.bien.socio.dto.SocioResponse;
 import com.bien.socio.dto.SocioUpdateRequest;
@@ -34,6 +35,13 @@ public class SocioResource {
     @GET
     public List<SocioResponse> listAll() {
         return socioService.listAll();
+    }
+
+    /** Datos para el reporte Excel de socios (Obs. #5). */
+    @GET
+    @Path("/reporte")
+    public List<SocioReporteRow> reporte() {
+        return socioService.reporte();
     }
 
     @GET

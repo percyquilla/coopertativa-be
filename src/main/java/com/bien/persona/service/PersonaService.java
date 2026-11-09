@@ -1,5 +1,6 @@
 package com.bien.persona.service;
 
+import com.bien.dominio.repository.DominioRepository;
 import com.bien.persona.dto.PersonaRequest;
 import com.bien.persona.dto.PersonaResponse;
 import com.bien.persona.entity.Persona;
@@ -8,6 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import com.bien.common.security.AuditContext;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
@@ -22,6 +24,12 @@ public class PersonaService {
 
     @Inject
     PersonaRepository personaRepository;
+
+    @Inject
+    DominioRepository.DominioValorRepository dominioValorRepository;
+
+    static final String DOM_GENERO = "dom_genero";
+    static final String DOM_ESTADO_CIVIL = "dom_estado_civil";
 
     public List<PersonaResponse> listAll() {
         return personaRepository.listAll().stream()
@@ -41,7 +49,7 @@ public class PersonaService {
         Persona persona = new Persona();
         applyRequest(persona, request);
         persona.setEstado("V");
-        persona.setEstacion("SISTEMA");
+        persona.setEstacion(audit.estacion());
         personaRepository.persist(persona);
         personaRepository.getEntityManager().flush();
         personaRepository.getEntityManager().refresh(persona);
@@ -55,6 +63,7 @@ public class PersonaService {
             throw new WebApplicationException("Ya existe una persona con esa cédula de identidad", Response.Status.CONFLICT);
         }
         applyRequest(persona, request);
+        persona.setFechaHora(java.time.LocalDateTime.now());
         return PersonaResponse.from(persona);
     }
 
@@ -63,7 +72,17 @@ public class PersonaService {
                 .orElseThrow(() -> new NotFoundException("Persona no encontrada: " + id));
     }
 
+    /** Género y estado civil se guardan por código del dominio, no por descripción. */
+    private void validarCodigo(String dominioId, String valor, String campo) {
+        if (!dominioValorRepository.existsVigente(dominioId, valor)) {
+            throw new BadRequestException("El " + campo + " «" + valor
+                    + "» no es un código válido del catálogo " + dominioId + ".");
+        }
+    }
+
     private void applyRequest(Persona persona, PersonaRequest request) {
+        validarCodigo(DOM_GENERO, request.genero(), "género");
+        validarCodigo(DOM_ESTADO_CIVIL, request.estadoCivil(), "estado civil");
         persona.setApellidoPaterno(request.apellidoPaterno());
         persona.setApellidoMaterno(request.apellidoMaterno());
         persona.setApellidoCasada(request.apellidoCasada());
@@ -79,5 +98,6 @@ public class PersonaService {
         persona.setFechaNacimiento(request.fechaNacimiento());
         persona.setEstadoCivil(request.estadoCivil());
         persona.setUsuario(audit.actor());
+        persona.setEstacion(audit.estacion());
     }
 }

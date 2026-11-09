@@ -210,7 +210,7 @@ public class EstructuraReporteService {
         l.setFormula(conFormula ? req.formula().trim() : null);
         l.setEstado(req.estado() == null || req.estado().isBlank() ? "V" : req.estado());
         l.setUsuario(audit.actor());
-        l.setEstacion("SISTEMA");
+        l.setEstacion(audit.estacion());
     }
 
     private void grabarCuentas(EstructuraReporteLinea l, ReporteLineaRequest req) {
@@ -223,7 +223,7 @@ public class EstructuraReporteService {
             m.setCuentaId(c.cuentaId());
             m.setSigno(c.signo());
             m.setUsuario(audit.actor());
-            m.setEstacion("SISTEMA");
+            m.setEstacion(audit.estacion());
             repository.persistCuenta(m);
         }
     }

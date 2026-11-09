@@ -4,6 +4,7 @@ import com.bien.certificadoaportacion.repository.CertificadoAportacionRepository
 import com.bien.common.security.AuditContext;
 import com.bien.cuentacaptacion.repository.CuentaCaptacionRepository;
 import com.bien.persona.repository.PersonaRepository;
+import com.bien.socio.dto.SocioReporteRow;
 import com.bien.socio.dto.SocioRequest;
 import com.bien.socio.dto.SocioResponse;
 import com.bien.socio.dto.SocioUpdateRequest;
@@ -71,7 +72,7 @@ public class SocioService {
         socio.setFechaIngreso(request.fechaIngreso());
         socio.setUsuario(audit.actor());
         socio.setEstado("V");
-        socio.setEstacion("SISTEMA");
+        socio.setEstacion(audit.estacion());
 
         socioRepository.persist(socio);
         socioRepository.getEntityManager().flush();
@@ -80,25 +81,26 @@ public class SocioService {
         return SocioResponse.from(socio);
     }
 
+    public List<SocioReporteRow> reporte() {
+        return socioRepository.reporte();
+    }
+
+    /** El número de socio no se modifica (Obs. #4): solo sucursal y fecha de ingreso. */
     @Transactional
     public SocioResponse update(Long id, SocioUpdateRequest request) {
         Socio socio = findEntityOrThrow(id);
-        if (socioRepository.existsByNumeroSocioAndIdNot(request.numeroSocio(), id)) {
-            throw new WebApplicationException("El número de socio ya existe: " + request.numeroSocio(), Response.Status.CONFLICT);
-        }
-        socio.setNumeroSocio(request.numeroSocio());
         socio.setSucursalId(request.sucursalId());
         socio.setFechaIngreso(request.fechaIngreso());
         socio.setUsuario(audit.actor());
+        socio.setEstacion(audit.estacion());
         return SocioResponse.from(socio);
     }
 
     /**
      * Retiro directo (baja administrativa). Solo procede para un socio sin dinero
-     * ni trámites de por medio: si tiene saldo en su cuenta de aportaciones o una
-     * solicitud de retiro en curso, hay que pasar por el flujo formal
-     * (solicitud de retiro → aprobar → pagar), que devuelve el saldo y cierra la
-     * cuenta antes de retirarlo.
+     * ni trámites de por medio: si tiene certificados vigentes, saldo en su
+     * cuenta de aportaciones (modelo anterior) o una solicitud de retiro en
+     * curso, hay que pasar por el flujo formal de solicitud de retiro.
      */
     @Transactional
     public SocioResponse retirar(Long id) {
@@ -109,7 +111,14 @@ public class SocioService {
         }
         if (solicitudRetiroRepository.existsAbiertaBySocio(id)) {
             throw new WebApplicationException(
-                    "El socio ya tiene una solicitud de retiro en curso. Resolvela desde Solicitudes de retiro.",
+                    "El socio ya tiene una solicitud de retiro en curso. Resuélvala desde Solicitudes de retiro.",
+                    Response.Status.CONFLICT);
+        }
+        long vigentes = certificadoRepository.countVigentesBySocio(id);
+        if (vigentes > 0) {
+            throw new WebApplicationException(
+                    "El socio tiene " + vigentes + " certificado(s) de aportación vigente(s). Use una solicitud "
+                            + "de retiro para devolverlos.",
                     Response.Status.CONFLICT);
         }
         certificadoRepository.findCuentaCaBySocio(id).ifPresent(cuentaId -> {

@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 public record SolicitudRetiroResponse(
         Long id,
         Long socioId,
+        Long certificadoId,
+        String numeroCertificado,
         LocalDate fechaSolicitud,
         String motivo,
         String estado,
@@ -17,13 +19,17 @@ public record SolicitudRetiroResponse(
         String usuarioResolucion,
         String observacionResolucion,
         LocalDate fechaDevolucion,
+        Long operacionId,
         String usuario,
-        LocalDateTime fechaHora) {
+        LocalDateTime fechaHora,
+        String estacion) {
 
-    public static SolicitudRetiroResponse from(SolicitudRetiro s) {
+    public static SolicitudRetiroResponse from(SolicitudRetiro s, String numeroCertificado) {
         return new SolicitudRetiroResponse(
                 s.getId(),
                 s.getSocioId(),
+                s.getCertificadoId(),
+                numeroCertificado,
                 s.getFechaSolicitud(),
                 s.getMotivo(),
                 s.getEstado(),
@@ -32,7 +38,9 @@ public record SolicitudRetiroResponse(
                 s.getUsuarioResolucion(),
                 s.getObservacionResolucion(),
                 s.getFechaDevolucion(),
+                s.getOperacionId(),
                 s.getUsuario(),
-                s.getFechaHora());
+                s.getFechaHora(),
+                s.getEstacion());
     }
 }

@@ -25,6 +25,18 @@ public class CuentaCaptacionRepository implements PanacheRepositoryBase<CuentaCa
                 + "(select p.id from Producto p where p.permiteInteres = true)");
     }
 
+    /**
+     * Cuentas de ahorro (producto AH) no cerradas en las que la persona figura
+     * como titular. Un socio no puede retirar su último certificado mientras
+     * tenga alguna (Obs. #11).
+     */
+    public List<CuentaCaptacion> listAhorroNoCerradasByPersona(Long personaId) {
+        return list("estadoCuenta <> 'C' "
+                + "and productoId in (select p.id from Producto p where p.tipoProducto = 'AH') "
+                + "and id in (select t.cuentaCaptacionId from CuentaTitular t where t.personaId = ?1) "
+                + "order by numeroCuenta", personaId);
+    }
+
     public long countByProducto(Long productoId) {
         return count("productoId", productoId);
     }

@@ -69,7 +69,7 @@ public class ProductoService {
         p.setMoneda(request.moneda());
         aplicarEditables(p, request, estado);
         p.setUsuario(audit.actor());
-        p.setEstacion("SISTEMA");
+        p.setEstacion(audit.estacion());
 
         productoRepository.persist(p);
         productoRepository.getEntityManager().flush();
@@ -102,6 +102,7 @@ public class ProductoService {
         p.setMoneda(request.moneda());
         aplicarEditables(p, request, estado);
         p.setUsuario(audit.actor());
+        p.setEstacion(audit.estacion());
 
         return ProductoResponse.from(p, cuentas);
     }

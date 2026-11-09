@@ -38,6 +38,7 @@ public class InstitucionService {
         i.setRepresentanteLegal(request.representanteLegal());
         i.setFechaFundacion(request.fechaFundacion());
         i.setUsuario(audit.actor());
+        i.setEstacion(audit.estacion());
         return InstitucionResponse.from(i);
     }
 

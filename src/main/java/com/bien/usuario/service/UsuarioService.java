@@ -1,5 +1,6 @@
 package com.bien.usuario.service;
 
+import com.bien.common.security.AuditContext;
 import com.bien.parametros.service.ParametroLookup;
 import com.bien.persona.repository.PersonaRepository;
 import com.bien.usuario.dto.UsuarioPasswordRequest;
@@ -36,6 +37,9 @@ public class UsuarioService {
 
     @Inject
     UsuarioRepository usuarioRepository;
+
+    @Inject
+    AuditContext audit;
 
     @Inject
     ParametroLookup parametros;
@@ -96,7 +100,7 @@ public class UsuarioService {
         usuario.setAlgoritmo("BCRYPT");
         usuario.setRequiereCambioPwd(true);
         usuario.setEstado("V");
-        usuario.setEstacion("SISTEMA");
+        usuario.setEstacion(audit.estacion());
 
         usuarioRepository.persist(usuario);
         usuarioRepository.getEntityManager().flush();
@@ -109,7 +113,7 @@ public class UsuarioService {
             usuarioRol.setRolId(rol.getId());
             usuarioRol.setFechaInicio(hoy);
             usuarioRol.setEstado("V");
-            usuarioRol.setEstacion("SISTEMA");
+            usuarioRol.setEstacion(audit.estacion());
             usuarioRolRepository.persist(usuarioRol);
         }
 
@@ -241,7 +245,7 @@ public class UsuarioService {
                 nuevo.setRolId(rolId);
                 nuevo.setFechaInicio(hoy);
                 nuevo.setEstado("V");
-                nuevo.setEstacion("SISTEMA");
+                nuevo.setEstacion(audit.estacion());
                 usuarioRolRepository.persist(nuevo);
             }
         }

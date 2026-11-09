@@ -22,6 +22,10 @@ import jakarta.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * Solicitudes de retiro. Registrar, aprobar, modificar y eliminar: OFICIAL
+ * (o ADMIN). Autorizar (contabiliza) y rechazar: GERENTE (o ADMIN).
+ */
 @Path("/solicitudes-retiro")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -49,18 +53,41 @@ public class SolicitudRetiroResource {
     }
 
     @POST
-    @RolesAllowed({"ADMIN", "CAJERO", "OFICIAL"})
+    @RolesAllowed({"ADMIN", "OFICIAL"})
     public Response create(@Valid SolicitudRetiroRequest request, @Context UriInfo uriInfo) {
         SolicitudRetiroResponse response = service.create(request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(response.id())).build();
         return Response.created(location).entity(response).build();
     }
 
+    /** Modificar una solicitud rechazada: vuelve a REG. */
+    @PUT
+    @Path("/{id}")
+    @RolesAllowed({"ADMIN", "OFICIAL"})
+    public SolicitudRetiroResponse update(@PathParam("id") Long id, @Valid SolicitudRetiroRequest request) {
+        return service.update(id, request);
+    }
+
+    /** Eliminar (lógico, estado ELM) una solicitud registrada o rechazada. */
+    @PUT
+    @Path("/{id}/eliminar")
+    @RolesAllowed({"ADMIN", "OFICIAL"})
+    public SolicitudRetiroResponse eliminar(@PathParam("id") Long id) {
+        return service.eliminar(id);
+    }
+
     @PUT
     @Path("/{id}/aprobar")
-    @RolesAllowed({"ADMIN", "GERENTE"})
+    @RolesAllowed({"ADMIN", "OFICIAL"})
     public SolicitudRetiroResponse aprobar(@PathParam("id") Long id, @Valid ResolucionRequest request) {
         return service.aprobar(id, request);
+    }
+
+    @PUT
+    @Path("/{id}/autorizar")
+    @RolesAllowed({"ADMIN", "GERENTE"})
+    public SolicitudRetiroResponse autorizar(@PathParam("id") Long id, @Valid ResolucionRequest request) {
+        return service.autorizar(id, request);
     }
 
     @PUT
@@ -68,19 +95,5 @@ public class SolicitudRetiroResource {
     @RolesAllowed({"ADMIN", "GERENTE"})
     public SolicitudRetiroResponse rechazar(@PathParam("id") Long id, @Valid ResolucionRequest request) {
         return service.rechazar(id, request);
-    }
-
-    @PUT
-    @Path("/{id}/pagar")
-    @RolesAllowed({"ADMIN", "GERENTE"})
-    public SolicitudRetiroResponse pagar(@PathParam("id") Long id, @Valid ResolucionRequest request) {
-        return service.pagar(id, request);
-    }
-
-    @PUT
-    @Path("/{id}/anular")
-    @RolesAllowed({"ADMIN", "GERENTE"})
-    public SolicitudRetiroResponse anular(@PathParam("id") Long id, @Valid ResolucionRequest request) {
-        return service.anular(id, request);
     }
 }

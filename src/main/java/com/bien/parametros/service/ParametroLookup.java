@@ -5,6 +5,8 @@ import com.bien.parametros.repository.ParametroGeneralRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.math.BigDecimal;
+
 /**
  * Lectura tipada de {@code sc_parametros.parametro_general} para el resto del
  * backend. Antes estos parámetros eran editables desde la pantalla pero ningún
@@ -24,6 +26,19 @@ public class ParametroLookup {
                 .map(v -> {
                     try {
                         return Integer.parseInt(v.trim());
+                    } catch (NumberFormatException e) {
+                        return porDefecto;
+                    }
+                })
+                .orElse(porDefecto);
+    }
+
+    public BigDecimal decimalValue(String codigo, BigDecimal porDefecto) {
+        return repository.findByCodigo(codigo)
+                .map(ParametroGeneral::getValor)
+                .map(v -> {
+                    try {
+                        return new BigDecimal(v.trim().replace(",", "."));
                     } catch (NumberFormatException e) {
                         return porDefecto;
                     }
